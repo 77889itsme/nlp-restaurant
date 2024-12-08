@@ -1,12 +1,12 @@
 import pandas as pd
 import nltk
+from nltk import pos_tag, word_tokenize
+from nltk.chunk import ne_chunk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
-import spacy
 
 nltk.download('vader_lexicon', quiet=True)
 sia = SentimentIntensityAnalyzer()
-nlp = spacy.load("en_core_web_sm")
 
 aspect_categories = {
     "food_quality": [
@@ -41,9 +41,16 @@ aspect_categories = {
 
 def extract_aspects(text):
     """Extract noun chunks and match them with category keywords."""
-    doc = nlp(text)
+    tokens = word_tokenize(text)
+    
+    # Part-of-speech tagging
+    tagged = pos_tag(tokens)
+    
+    # Chunking (simplified noun phrase extraction)
+    chunks = ne_chunk(tagged, binary=True)
+
     aspects = []
-    for chunk in doc.noun_chunks:
+    for chunk in chunks:
         for category, keywords in aspect_categories.items():
             if any(keyword.lower() in chunk.text.lower() for keyword in keywords):
                 aspects.append((category, chunk.text))
