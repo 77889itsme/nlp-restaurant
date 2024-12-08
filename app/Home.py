@@ -1,31 +1,27 @@
 import streamlit as st
 import pandas as pd
 import os
-import requests
+import gdown
+import pickle
 from sentiment_analysis.app import run_sentiment_analysis
 from recommendation.app import run_recommendation
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # +++++++++++++ load data via Google Drive ++++++++++++++++ #
 @st.cache_data
-def download_data(file_url, file_path):
+def download_data_gdrive(file_id, file_path):
     folder = os.path.dirname(file_path)
-    if folder and not os.path.exists(folder):  # 如果指定了文件夹路径，确保存在
+    if not os.path.exists(folder):
         os.makedirs(folder)
 
+    url = f"https://drive.google.com/uc?id={file_id}"
     if not os.path.exists(file_path):
-        with requests.get(file_url, stream=True) as r:
-            r.raise_for_status()
-            with open(file_path, 'wb') as f:
-                for chunk in r.iter_content(chunk_size=8192):
-                    f.write(chunk)
-        st.write(f"Downloaded {file_path}")
+        gdown.download(url, file_path, quiet=False)
     return file_path
 
 @st.cache_data
 def read_pickle(file_path):
     try:
-        # 确保文件存在
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} not found!")
 
@@ -39,10 +35,10 @@ def read_pickle(file_path):
 
 # df = read_pickle("data/dat.pk")
 
-file_url = "https://drive.google.com/uc?id=1zgIA4aMUuT6_t9cWD90BOhVCyXqCHzaZ"
+file_id = "1zgIA4aMUuT6_t9cWD90BOhVCyXqCHzaZ"
 file_path = "data/dat.pk"
 
-file_path_downloaded = download_data(file_url, file_path)
+file_path_downloaded = download_data_gdrive(file_id, file_path)
 
 if os.path.exists(file_path_downloaded):
     st.write(f"File is ready at: {file_path_downloaded}")
