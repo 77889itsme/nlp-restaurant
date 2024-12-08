@@ -24,10 +24,18 @@ def download_data(file_url, file_path):
 
 @st.cache_data
 def read_pickle(file_path):
-    import pickle
-    dat = pickle.load(open(file_path, "rb"))
-    df = pd.DataFrame(dat)
-    return df
+    try:
+        # 确保文件存在
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"File {file_path} not found!")
+
+        # 加载文件
+        with open(file_path, "rb") as f:
+            dat = pickle.load(f)
+        return pd.DataFrame(dat)
+    except Exception as e:
+        st.error(f"Failed to load pickle file: {e}")
+        return None
 
 # df = read_pickle("data/dat.pk")
 
@@ -38,8 +46,9 @@ file_path_downloaded = download_data(file_url, file_path)
 
 if os.path.exists(file_path_downloaded):
     st.write(f"File is ready at: {file_path_downloaded}")
-    df = read_pickle(file_path_downloaded) 
-    st.write("Data successfully loaded!")
+    df = read_pickle(file_path_downloaded)
+    if df is not None:
+        st.write("Data successfully loaded!")
 else:
     st.error("Failed to download the data file.")
 
