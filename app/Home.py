@@ -43,7 +43,12 @@ def read_pickle(file_path):
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"File {file_path} not found!")
 
-        # 加载文件
+        # 预览文件内容
+        with open(file_path, "rb") as f:
+            preview = f.read(100)  # 读取前 100 个字节
+            st.write(f"File content preview: {preview}")
+
+        # 尝试加载 pickle 文件
         with open(file_path, "rb") as f:
             dat = pickle.load(f)
         return pd.DataFrame(dat)
