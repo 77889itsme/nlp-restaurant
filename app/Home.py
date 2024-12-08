@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
-import gdown
+import requests
 import pickle
 from sentiment_analysis.app import run_sentiment_analysis
 from recommendation.app import run_recommendation
@@ -9,15 +9,33 @@ from recommendation.app import run_recommendation
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # +++++++++++++ load data via Google Drive ++++++++++++++++ #
 @st.cache_data
-def download_data_gdrive(file_id, file_path):
-    folder = os.path.dirname(file_path)
-    if not os.path.exists(folder):
-        os.makedirs(folder)
+def download_data_from_google_drive(file_id, destination):
+    def get_confirm_token(response):
+        for key, value in response.cookies.items():
+            if key.startswith('download_warning'):
+                return value
+        return None
 
-    url = f"https://drive.google.com/uc?id={file_id}"
-    if not os.path.exists(file_path):
-        gdown.download(url, file_path, quiet=False)
-    return file_path
+    def save_response_content(response, destination):
+        CHUNK_SIZE = 32768
+
+        with open(destination, 'wb') as f:
+            for chunk in response.iter_content(CHUNK_SIZE):
+                if chunk:  # filter out keep-alive new chunks
+                    f.write(chunk)
+
+    URL = "https://docs.google.com/uc?export=download"
+    session = requests.Session()
+
+    response = session.get(URL, params={'id': file_id}, stream=True)
+    token = get_confirm_token(response)
+
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(URL, params=params, stream=True)
+
+    save_response_content(response, destination)
+    return destination
 
 @st.cache_data
 def read_pickle(file_path):
@@ -37,8 +55,8 @@ def read_pickle(file_path):
 
 file_id = "1zgIA4aMUuT6_t9cWD90BOhVCyXqCHzaZ"
 file_path = "data/dat.pk"
-
-file_path_downloaded = download_data_gdrive(file_id, file_path)
+os.makedirs(os.path.dirname(file_path), exist_ok=True)
+file_path_downloaded = download_data_from_google_drive(file_id, file_path)
 
 if os.path.exists(file_path_downloaded):
     st.write(f"File is ready at: {file_path_downloaded}")
