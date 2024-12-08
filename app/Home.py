@@ -48,6 +48,8 @@ if os.path.exists(file_path_downloaded):
 else:
     st.error("Failed to download the data file.")
 
+current_dir = os.path.dirname(__file__)
+image_path = os.path.join(current_dir, "homepage.png")
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++ below are streamlit code snippets +++++++++++  #
@@ -64,4 +66,4 @@ elif module == "🍴 Recommendation":
 else:
     st.header("Analysis of Restaurant Reviews in California")
     st.write("Welcome to our group project's interactive app! Select a module from the sidebar.")
-    st.image("homepage.png", use_column_width=True)
+    st.image(image_path, use_container_width=True)
