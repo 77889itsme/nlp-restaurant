@@ -8,8 +8,7 @@ from recommendation.app import run_recommendation
 # ++++++++++++++++++++ load data  +++++++++++++++++++++++++ #
 @st.cache_data
 def read_pickle(file_path):
-    return pd.read_pickle(file_path, compression="zip")
-
+    return pd.read_pickle(file_path)
 
 current_dir = os.path.dirname(__file__)
 data_path = os.path.join(current_dir, "data/dat_compressed.pkl")
