@@ -7,13 +7,14 @@ from recommendation.app import run_recommendation
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++++++++++++ load data  +++++++++++++++++++++++++ #
 @st.cache_data
-def read_pickle_cached(file_path):
-    return pd.read_pickle(file_path, compression="zip")
+def read_csv_cached(file_path):
+    return pd.read_csv(file_path)
 
 current_dir = os.path.dirname(__file__)
+data_path = os.path.join(current_dir, "dat.csv")
 image_path = os.path.join(current_dir, "homepage.png")
 
-df = read_pickle_cached("app/data/dat_compressed.pkl")
+df = read_csv_cached(data_path)
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++ below are streamlit code snippets +++++++++++  #
