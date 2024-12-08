@@ -4,4 +4,3 @@ scikit-learn
 nltk
 plotly
 gdown
-pickle
