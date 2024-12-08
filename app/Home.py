@@ -13,7 +13,7 @@ def read_pickle_cached(file_path):
 current_dir = os.path.dirname(__file__)
 image_path = os.path.join(current_dir, "homepage.png")
 
-df = read_pickle_cached("data/dat_compressed.pkl")
+df = read_pickle_cached("app/data/dat_compressed.pkl")
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++ below are streamlit code snippets +++++++++++  #
