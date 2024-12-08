@@ -9,6 +9,10 @@ from recommendation.app import run_recommendation
 # +++++++++++++ load data via Google Drive ++++++++++++++++ #
 @st.cache_data
 def download_data(file_url, file_path):
+    folder = os.path.dirname(file_path)
+    if folder and not os.path.exists(folder):  # 如果指定了文件夹路径，确保存在
+        os.makedirs(folder)
+
     if not os.path.exists(file_path):
         with requests.get(file_url, stream=True) as r:
             r.raise_for_status()
