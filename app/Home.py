@@ -11,10 +11,9 @@ def read_pickle_cached(file_path):
     return pd.read_pickle(file_path, compression="zip")
 
 current_dir = os.path.dirname(__file__)
-data_path = os.path.join(current_dir, "data/dat_compressed.pkl")
 image_path = os.path.join(current_dir, "homepage.png")
 
-df = read_pickle_cached(data_path)
+df = read_pickle_cached("data/dat_compressed.pkl")
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++ below are streamlit code snippets +++++++++++  #
