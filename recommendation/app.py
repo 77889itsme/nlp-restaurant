@@ -42,7 +42,8 @@ def run_recommendation(df):
                         lon="Longitude",
                         text="Restaurant",
                         hover_name="Restaurant",
-                        zoom=8,
+                        zoom=10,
+                        height = 600,
                         mapbox_style="carto-positron",
                     )
                     st.plotly_chart(fig, use_container_width=True)
