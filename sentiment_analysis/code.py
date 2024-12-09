@@ -1,4 +1,5 @@
 import pandas as pd
+import re
 import nltk
 from nltk import pos_tag
 from nltk.tree import Tree
@@ -9,6 +10,11 @@ from concurrent.futures import ThreadPoolExecutor
 
 nltk.download('vader_lexicon', quiet=True)
 sia = SentimentIntensityAnalyzer()
+
+def preprocess_text(text):
+    text = re.sub(r'[^\w\s]', '', text.lower())  # Remove punctuation and convert to lowercase
+    text = re.sub(r'\d+', '', text)  # Remove numbers
+    return text
 
 aspect_categories = {
     "Food Quality": [
@@ -72,7 +78,7 @@ def get_word_sentiments(text):
     return sentiments
 
 def process_review(row):
-    review_text = row['body_clean']
+    review_text = row['body_clean'].apply(preprocess_text)
     row['sentiment_score'] = analyze_text_sentiment(review_text)
     aspects = extract_aspects(review_text)
     word_sentiments = get_word_sentiments(review_text)
