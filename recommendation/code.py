@@ -71,6 +71,8 @@ def recommend_restaurants(user_input, user_city, vectorizer, tfidf_matrix, df, t
         location = df.iloc[idx]['address']  # Get the location
         stars = df.iloc[idx]['stars_y']
         cuisine = df.iloc[idx]['cuisine']
+        longitude = df.iloc[idx]['longitude']
+        latitude = df.iloc[idx]['latitude']
         recommendations.append({
             'restaurant': restaurant,
             'city': city,
@@ -78,13 +80,13 @@ def recommend_restaurants(user_input, user_city, vectorizer, tfidf_matrix, df, t
             'stars': stars,
             'cuisine': cuisine,
             'matched_review': review,
-            'score': score
+            'score': score,
+            "longitude": longitude,
+            "latitude": latitude
         })
-    
     return recommendations
 
 def recommendation(df, user_input, user_city, top_n=5):
     vectorizer, tfidf_matrix = build_tfidf_matrix(df)
-
     recommendations = recommend_restaurants(user_input, user_city, vectorizer, tfidf_matrix, df, top_n)
     return recommendations

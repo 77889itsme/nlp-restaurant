@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from recommendation.code import recommendation
 
 
@@ -13,16 +14,25 @@ def run_recommendation(df):
         if user_input and user_city:
             recommendations = recommendation(df, user_input, user_city, top_n=5)
             if recommendations:
-                st.write("Top Recommendations:")
-                for idx, rec in recommendations:
-                    st.subheader(f"{idx}. {rec['restaurant']}")
-                    st.write(f"City: {rec['city']}")
-                    st.write(f"Address: {rec['address']}")
-                    st.write(f"Stars: {rec['stars']}")
-                    st.write(f"Cuisine: {rec['cuisine']}")
-                    st.write(f"Matched Review: {rec['matched_review']}")
-                    st.write(f"Score: {rec['score']:.4f}")
-                    st.write("-" * 50)
+                tab1, tab2 = st.tabs(["Recommendations", "Map"])
+
+                with tab1: 
+                    st.header("Top Recommendations:")
+                    for idx, rec in enumerate(recommendations, start=1):
+                        st.subheader(f"{idx}. {rec['restaurant']}")
+                        st.write(f"City: {rec['city']}")
+                        st.write(f"Address: {rec['address']}")
+                        st.write(f"Stars: {rec['stars']}")
+                        st.write(f"Cuisine: {rec['cuisine']}")
+                        st.write(f"Matched Review: {rec['matched_review']}")
+                        st.write(f"Score: {rec['score']:.4f}")
+                        st.write("-" * 50)
+
+                with tab2:
+                    st.header("Restaurant Locations:")
+                    map_data = pd.DataFrame([{"latitude": rec["latitude"], "longitude": rec["longitude"]} for rec in recommendations])
+                    st.map(map_data)
+                    
             else:
                 st.write("No recommendations found.")
         else:
