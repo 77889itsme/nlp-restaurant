@@ -61,4 +61,4 @@ def analyze_sentiment(df):
         results = list(executor.map(process_review, [row for _, row in df.iterrows()]))
 
     result_df = pd.DataFrame(results)
-    return result_df[["name", "longitude", "latitude", "stars_y","sentiment_score"] + [f"{aspect}" for aspect in aspect_categories.keys()]]
+    return result_df[["name", "longitude", "latitude", "stars_y","sentiment_score"] + [aspect for aspect in aspect_categories.keys()]]

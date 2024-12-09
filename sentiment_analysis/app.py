@@ -14,22 +14,21 @@ def run_sentiment_analysis(df):
         if df_filtered.empty:
             st.warning(f"No data found for this restaurant: {user_input}")
         else:
-            df_sen = analyze_sentiment(df_filtered)
+            result_df = analyze_sentiment(df_filtered)
 
             total_reviews = len(df_filtered)
             avg_rating = round(df_filtered["stars_y"].mean(),2)
-            aspect_sentiment_summary = (
-                df_sen['aspect_sentiments']
-                .apply(lambda x: pd.Series(x))
-                .mean()
-                .reset_index()
-                .rename(columns={0: 'Average Sentiment', 'index': 'Category'})
-            )
+            overall_avg = result_df["sentiment_score"].mean()
+            aspect_averages = result_df["Food Quality", "Service", "Ambiance", "Cleanliness", "Price"].mean()
 
+            st.write("Processed Data:")
+            st.dataframe(result_df)
             st.write(f"**Total Reviews Analyzed:** {total_reviews}")
             st.write(f"**Average Rating of {user_input}:** {avg_rating}")
+            st.write(f"**Average Sentiment Score:** {overall_avg:.2f}")
             st.write("**Sentiment Analysis Table Per Category:**")
-            st.dataframe(aspect_sentiment_summary)
+            st.dataframe(aspect_averages)
+
 
             tab1, tab2 = st.tabs(["Ratings by Category", "Map View"])
             
@@ -37,7 +36,7 @@ def run_sentiment_analysis(df):
                 st.header("Sentiment Radar")
                 
                 fig = px.line_polar(
-                    aspect_sentiment_summary,
+                    aspect_averages,
                     r="Average Sentiment",
                     theta="Category",
                     line_close=True
