@@ -2,7 +2,6 @@ import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Text cleaning function
 def preprocess_text(text):
     text = re.sub(r'[^\w\s]', '', text.lower())  # Remove punctuation and convert to lowercase
     text = re.sub(r'\d+', '', text)  # Remove numbers
@@ -18,7 +17,6 @@ def infer_cuisine(text):
         'indian': ['curry', 'naan', 'masala'],
         'american': ['burger', 'steak', 'fries']
     }
-    text = preprocess_text(text)
     for cuisine, keywords in cuisines.items():
         if any(keyword in text for keyword in keywords):
             return cuisine
@@ -27,10 +25,9 @@ def infer_cuisine(text):
 
 # wrap up into a function
 def build_tfidf_matrix(df):
-    df['cuisine'] = df['text'].apply(infer_cuisine)
-    df['cleaned_review'] = df['text'].apply(preprocess_text)
+    df['cuisine'] = df['body_clean'].apply(infer_cuisine)
     vectorizer = TfidfVectorizer(stop_words='english')
-    tfidf_matrix = vectorizer.fit_transform(df['cleaned_review'])
+    tfidf_matrix = vectorizer.fit_transform(df['body_clean'])
     return vectorizer, tfidf_matrix
 
 
