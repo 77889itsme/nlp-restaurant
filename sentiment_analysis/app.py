@@ -13,7 +13,7 @@ def run_sentiment_analysis(df):
     user_input = st.text_input("Enter the restaurant you want to look at:")
     
     if st.button("Analyze"):
-        df_filtered = df[df['name'] == user_input]
+        df_filtered = df[df['name'].str.contains(user_input, case=False, na=False)]
 
         if df_filtered.empty:
             st.warning(f"No data found for this restaurant: {user_input}")
