@@ -1,7 +1,5 @@
 import streamlit as st
 import pandas as pd
-import os
-import requests
 from sentiment_analysis.app import run_sentiment_analysis
 from recommendation.app import run_recommendation
 
