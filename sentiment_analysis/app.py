@@ -48,7 +48,7 @@ def run_sentiment_analysis(df):
                 )
                 fig.update_traces(fill='toself', line_color='blue')
                 fig.update_layout(
-                    polar=dict(radialaxis=dict(visible=True, range=[0, 1])),
+                    polar=dict(radialaxis=dict(visible=True, range=[-1, 1])),
                     showlegend=False,
                 )
                 st.plotly_chart(fig)
