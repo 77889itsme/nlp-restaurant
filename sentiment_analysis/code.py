@@ -8,6 +8,7 @@ from nltk.chunk import ne_chunk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
 
+nltk.download('punkt_tab')
 nltk.download('vader_lexicon', quiet=True)
 sia = SentimentIntensityAnalyzer()
 
@@ -90,8 +91,7 @@ def process_review(row):
         for word, sentiment in word_sentiments:
             if any(keyword.lower() in word.lower() for keyword in aspect_categories[category]):
                 category_sentiment += sentiment
-        if category_sentiment != 0:
-            aspect_sentiments[category] = category_sentiment
+        aspect_sentiments[category] = category_sentiment
     row['aspect_sentiments'] = aspect_sentiments
     return row
 
