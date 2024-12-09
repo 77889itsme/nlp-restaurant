@@ -21,7 +21,7 @@ def run_sentiment_analysis(df):
             df_sen = cached_analyze_sentiment(df_filtered)
 
             total_reviews = len(df_filtered)
-            avg_rating = round(df_filtered["stars_x"].mean(),2)
+            avg_rating = round(df_filtered["stars_y"].mean(),2)
             aspect_sentiment_summary = (
                 df_sen['aspect_sentiments']
                 .apply(lambda x: pd.Series(x))
