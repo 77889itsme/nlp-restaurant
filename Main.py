@@ -28,9 +28,7 @@ elif module == "🍴 Recommendation":
     run_recommendation(df) 
 else:
     st.header("NLP Analysis of Restaurant Reviews in California")
-    st.markdown("---")
-
-    st.markdown("""
+    st.write("""
                 Welcome to our **interactive app**, designed as part of our group project!  
                 Explore restaurant reviews in California with powerful sentiment analysis and recommendation tools we create!  
                 """)
