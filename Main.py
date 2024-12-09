@@ -29,4 +29,5 @@ elif module == "🍴 Recommendation":
 else:
     st.header("Analysis of Restaurant Reviews in California")
     st.write("Welcome to our group project's interactive app! Select a module from the sidebar.")
+    st.write("This is a prototype, and the database is currently limited to Santa Barbara to ensure smooth execution.")
     st.image("images/homepage.png", use_container_width=True)
