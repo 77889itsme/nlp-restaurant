@@ -27,7 +27,7 @@ def run_sentiment_analysis(df):
             ) 
 
             st.write(f"**Total Reviews Analyzed:** {total_reviews}")
-            st.write(f"**Average Rating of {user_input}:** {avg_rating}")
+            st.write(f"**Average Rating of Your Search:** {avg_rating}")
             st.write(f"**Average Sentiment Score:** {overall_avg:.2f}")
             st.write("**Sentiment Analysis Table Per Category:**")
             st.dataframe(aspect_averages)
@@ -60,8 +60,8 @@ def run_sentiment_analysis(df):
                         lat="latitude",
                         lon="longitude",
                         hover_name="name",
-                        zoom=10,
-                        height=600
+                        zoom=12,
+                        height=400
                     )
                     fig.update_layout(
                         mapbox_style="carto-positron",
