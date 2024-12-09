@@ -1,10 +1,7 @@
 import pandas as pd
 import re
 import nltk
-from nltk import pos_tag
-from nltk.tree import Tree
-from nltk.tokenize import word_tokenize
-from nltk.chunk import ne_chunk
+from nltk.tokenize import sent_tokenize
 from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
 
@@ -23,108 +20,45 @@ def preprocess_text(text):
 aspect_categories = {
     "Food Quality": [
         "food", "taste", "flavor", "dish", "meal", "delicious", "yummy", "fresh", "savor", "tasty", "flavorful", 
-        "spicy", "bland", "sweet", "salty", "bitter", "sour", "crispy", "juicy", "hearty", "appetizing", "gourmet",
-        "rich", "succulent", "overcooked", "undercooked", "raw", "burnt", "mouthwatering", "greasy"
+        "spicy", "bland", "sweet", "salty", "bitter", "sour", "crispy", "juicy", "hearty", "appetizing", "gourmet"
     ],
     "Service": [
         "service", "staff", "waiter", "waitress", "attentive", "friendly", "slow", "helpful", "fast", "polite", 
-        "rude", "unprofessional", "professional", "efficient", "courteous", "wait time", "smiling", "assistance", 
-        "knowledgeable", "approachable", "accommodating", "disappointing", "welcoming", "supportive", "prompt", 
-        "unfriendly", "patient", "kind", "disinterested", "friendly"
+        "rude", "unprofessional", "professional", "efficient", "courteous", "wait time", "smiling", "assistance"
     ],
     "Ambiance": [
         "ambiance", "atmosphere", "vibe", "decor", "music", "lighting", "environment", "comfort", "cozy", "warm", 
-        "inviting", "chilly", "modern", "classic", "elegant", "rustic", "lively", "calm", "romantic", "elegant", 
-        "charming", "relaxed", "chilly", "dark", "bright", "stylish", "minimal", "warmth", "cool", "friendly", 
-        "intimate", "space", "noise", "crowded", "quiet", "peaceful", "laid-back", "pleasant", "sophisticated"
+        "inviting", "chilly", "modern", "classic", "elegant", "rustic", "lively", "calm", "romantic", "elegant"
     ],
     "Cleanliness": [
         "clean", "dirty", "hygiene", "neat", "messy", "orderly", "spotless", "immaculate", "tidy", "unsanitary", 
-        "disorganized", "cleanliness", "filthy", "sanitized", "disgusting", "stinky", "smelly", "fresh", "pristine", 
-        "scruffy", "dusty", "unhygienic", "cluttered", "messy", "sterile", "decent", "polished"
+        "disorganized", "cleanliness", "filthy", "sanitized", "disgusting", "stinky", "smelly", "fresh", "pristine"
     ],
     "Price": [
         "price", "cost", "expensive", "cheap", "affordable", "value", "inexpensive", "overpriced", "reasonable", 
-        "pricy", "value-for-money", "budget", "luxurious", "high-end", "expensive", "costly", "discounted", 
-        "affordability", "bargain", "premium", "value", "reasonable", "low-cost", "high-price", "worth it", 
-        "cheap", "underpriced", "overcharged"
+        "pricy", "value-for-money", "budget", "luxurious", "high-end", "expensive", "costly", "discounted"
     ]
 }
 
-def extract_aspects(text):
-    tokens = word_tokenize(text)
-    tagged = pos_tag(tokens)
-    chunks = ne_chunk(tagged, binary=True) 
+def extract_aspect_score(text, keywords):
+    sentences = sent_tokenize(text)
+    relevant_text = " ".join([sentence for sentence in sentences if any(keyword in sentence.lower() for keyword in keywords)])
+    if relevant_text.strip():
+        return sia.polarity_scores(relevant_text)["compound"]
+    return None
 
-    aspects = []
-    for chunk in chunks:
-        if isinstance(chunk, Tree):
-            entity = " ".join(c[0] for c in chunk.leaves())  # Get the words in the entity
-        else:
-            entity = chunk[0]
-
-        for category, keywords in aspect_categories.items():
-            if any(keyword in entity.lower() for keyword in keywords):
-                aspects.append((category, entity))
-    
-    return aspects
-
-def analyze_text_sentiment(text): 
-    return sia.polarity_scores(text)['compound']
-
-def calculate_aspect_sentiments(aspects, word_sentiments):
-    aspect_sentiments = {}
-    for category, aspect in aspects:
-        category_sentiment = sum(
-            sentiment for word, sentiment in word_sentiments
-            if any(keyword in word.lower() for keyword in aspect_categories[category])
-        )
-        aspect_sentiments[category] = category_sentiment
-    return aspect_sentiments
-
-def get_word_sentiments(text):
-    sentiments = []
-    words = text.split()
-    for word in words:
-        sentiment_score = sia.polarity_scores(word)['compound']
-        if sentiment_score != 0: 
-            sentiments.append((word, sentiment_score))
-    return sentiments
-
-
-"""
 def process_review(row):
-    review_text = row['text']
-    preprocessed_text = preprocess_text(review_text)
-    row['sentiment_score'] = analyze_text_sentiment(preprocessed_text)
-    aspects = extract_aspects(preprocessed_text)
-    word_sentiments = get_word_sentiments(preprocessed_text)
+    row["cleaned_text"] = preprocess_text(row["text"])
+    row["sentiment_score"] = sia.polarity_scores(row["cleaned_text"])["compound"]
     
-    aspect_sentiments = {}
-    for category, aspect in aspects:
-        category_sentiment = 0
-        for word, sentiment in word_sentiments:
-            if any(keyword.lower() in word.lower() for keyword in aspect_categories[category]):
-                category_sentiment += sentiment
-        aspect_sentiments[category] = category_sentiment
-    row['aspect_sentiments'] = aspect_sentiments
+    for aspect, keywords in aspect_categories.items():
+        row[f"{aspect}"] = extract_aspect_score(row["cleaned_text"], keywords)
+    
     return row
-"""
 
-def process_review(row):
-    review_text = str(row.get("text", ""))
-    preprocessed_text = preprocess_text(review_text)
-    sentiment_score = analyze_text_sentiment(preprocessed_text)
-    aspects = extract_aspects(preprocessed_text)
-    word_sentiments = [(word, analyze_text_sentiment(word)) for word in preprocessed_text.split()]
-    aspect_sentiments = calculate_aspect_sentiments(aspects, word_sentiments)
-    return {
-        "sentiment_score": sentiment_score,
-        "aspect_sentiments": aspect_sentiments,
-    }
-
-def analyze_sentiment(df):
-    df = df.copy()
+def analyze_sentiment(df): 
     with ThreadPoolExecutor(max_workers=4) as executor:
         results = list(executor.map(process_review, [row for _, row in df.iterrows()]))
-    return pd.DataFrame(results)
+
+    result_df = pd.DataFrame(results)
+    return result_df[["name", "longitude", "latitude", "stars_y","sentiment_score"] + [f"{aspect}" for aspect in aspect_categories.keys()]]

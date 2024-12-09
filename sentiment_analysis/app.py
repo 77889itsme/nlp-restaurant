@@ -3,10 +3,6 @@ import pandas as pd
 import plotly.express as px
 from sentiment_analysis.code import analyze_sentiment
 
-@st.cache_data
-def cached_analyze_sentiment(df):
-    return analyze_sentiment(df)
-
 def run_sentiment_analysis(df):
     st.header("Sentiment Analysis")
 
@@ -18,7 +14,7 @@ def run_sentiment_analysis(df):
         if df_filtered.empty:
             st.warning(f"No data found for this restaurant: {user_input}")
         else:
-            df_sen = cached_analyze_sentiment(df_filtered)
+            df_sen = analyze_sentiment(df_filtered)
 
             total_reviews = len(df_filtered)
             avg_rating = round(df_filtered["stars_y"].mean(),2)
