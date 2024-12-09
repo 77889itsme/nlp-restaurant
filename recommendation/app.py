@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 from recommendation.code import recommendation
 
 
@@ -30,8 +31,21 @@ def run_recommendation(df):
 
                 with tab2:
                     st.header("Restaurant Locations:")
-                    map_data = pd.DataFrame([{"latitude": rec["latitude"], "longitude": rec["longitude"]} for rec in recommendations])
-                    st.map(map_data)
+                    map_data = pd.DataFrame(
+                        [{  "Restaurant": rec["restaurant"],
+                            "Latitude": rec["latitude"],
+                            "Longitude": rec["longitude"],}
+                            for rec in recommendations])
+                    fig = px.scatter_mapbox(
+                        map_data,
+                        lat="Latitude",
+                        lon="Longitude",
+                        text="Restaurant",
+                        hover_name="Restaurant",
+                        zoom=8,
+                        mapbox_style="carto-positron",
+                    )
+                    st.plotly_chart(fig, use_container_width=True)
                     
             else:
                 st.write("No recommendations found.")
