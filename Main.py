@@ -30,9 +30,7 @@ else:
     st.header("NLP Analysis of Restaurant Reviews in California")
     st.caption("This is a prototype, and the database is currently limited to Santa Barbara to ensure smooth execution.")
 
-    st.markdown("""
-                Welcome to our **interactive app**, designed as part of our group project!  
-                Explore restaurant reviews in California with powerful sentiment analysis and recommendation tools we create!  
-                """)
+    st.write("Welcome to our **interactive app**, designed as part of our group project!" )
+    st.write("Explore restaurant reviews in California with powerful sentiment analysis and recommendation tools we create.")
 
     st.image("images/homepage.png", use_container_width=True)
