@@ -8,6 +8,7 @@ from concurrent.futures import ThreadPoolExecutor
 nltk.download('vader_lexicon', quiet=True)
 nltk.download('punkt_tab')
 nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('maxent_ne_chunker_tab')
 
 sia = SentimentIntensityAnalyzer()
 
