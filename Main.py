@@ -10,8 +10,9 @@ def read_pickle(file_path):
     dat = pickle.load(open(file_path, "rb"))
     df = pd.DataFrame(dat)
     return df
+# df = read_pickle("data/dat.pk")
 
-df = read_pickle("data/dat.pk")
+df = pd.read_csv("data/dat.csv")
 
 # +++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #
 # ++++++++++ below are streamlit code snippets +++++++++++  #
