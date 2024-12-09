@@ -1,16 +1,12 @@
 import pandas as pd
 import nltk
-from nltk import pos_tag, word_tokenize
+from nltk import pos_tag
+from nltk.tokenize import word_tokenize
 from nltk.chunk import ne_chunk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
 
-nltk.download('punkt_tab')
-nltk.download('averaged_perceptron_tagger_eng')
-nltk.download('maxent_ne_chunker_tab')
-nltk.download('words')
 nltk.download('vader_lexicon', quiet=True)
-
 sia = SentimentIntensityAnalyzer()
 
 aspect_categories = {
