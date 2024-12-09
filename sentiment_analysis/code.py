@@ -72,6 +72,16 @@ def extract_aspects(text):
 def analyze_text_sentiment(text): 
     return sia.polarity_scores(text)['compound']
 
+def calculate_aspect_sentiments(aspects, word_sentiments):
+    aspect_sentiments = {}
+    for category, aspect in aspects:
+        category_sentiment = sum(
+            sentiment for word, sentiment in word_sentiments
+            if any(keyword in word.lower() for keyword in aspect_categories[category])
+        )
+        aspect_sentiments[category] = category_sentiment
+    return aspect_sentiments
+
 def get_word_sentiments(text):
     sentiments = []
     words = text.split()
@@ -81,6 +91,8 @@ def get_word_sentiments(text):
             sentiments.append((word, sentiment_score))
     return sentiments
 
+
+"""
 def process_review(row):
     review_text = row['text']
     preprocessed_text = preprocess_text(review_text)
@@ -97,8 +109,22 @@ def process_review(row):
         aspect_sentiments[category] = category_sentiment
     row['aspect_sentiments'] = aspect_sentiments
     return row
+"""
+
+def process_review(row):
+    review_text = str(row.get("text", ""))
+    preprocessed_text = preprocess_text(review_text)
+    sentiment_score = analyze_text_sentiment(preprocessed_text)
+    aspects = extract_aspects(preprocessed_text)
+    word_sentiments = [(word, analyze_text_sentiment(word)) for word in preprocessed_text.split()]
+    aspect_sentiments = calculate_aspect_sentiments(aspects, word_sentiments)
+    return {
+        "sentiment_score": sentiment_score,
+        "aspect_sentiments": aspect_sentiments,
+    }
 
 def analyze_sentiment(df):
+    df = df.copy()
     with ThreadPoolExecutor(max_workers=4) as executor:
         results = list(executor.map(process_review, [row for _, row in df.iterrows()]))
     return pd.DataFrame(results)
