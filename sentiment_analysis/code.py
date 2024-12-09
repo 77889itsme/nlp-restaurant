@@ -6,6 +6,8 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
 
 nltk.download('vader_lexicon', quiet=True)
+nltk.download('punkt', quiet=True)
+
 sia = SentimentIntensityAnalyzer()
 
 aspect_categories = {
