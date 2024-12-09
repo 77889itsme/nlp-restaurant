@@ -19,7 +19,7 @@ def run_sentiment_analysis(df):
             total_reviews = len(df_filtered)
             avg_rating = round(df_filtered["stars_y"].mean(),2)
             overall_avg = result_df["sentiment_score"].mean()
-            aspect_averages = result_df["Food Quality", "Service", "Ambiance", "Cleanliness", "Price"].mean()
+            aspect_averages = result_df[["Food Quality", "Service", "Ambiance", "Cleanliness", "Price"]].mean()
 
             st.write("Processed Data:")
             st.dataframe(result_df)
