@@ -6,8 +6,9 @@ from sentiment_analysis.code import analyze_sentiment
 def run_sentiment_analysis(df):
     st.header("Sentiment Analysis")
 
-    user_input = st.text_input("Enter the restaurant you want to look at:")
-    
+    user_input = st.text_input("Enter the restaurant or keyword you want to look at:")
+    st.caption("Feel free to search for a specific restaurant like 'The Lark', a chain restaurant like 'Domino's', or even just a keyword!")
+        
     if st.button("Analyze"):
         df_filtered = df[df['name'].str.contains(user_input, case=False, na=False)]
 
@@ -29,7 +30,7 @@ def run_sentiment_analysis(df):
             st.write(f"**Total Reviews Analyzed:** {total_reviews}")
             st.write(f"**Average Star Rating of Your Search:** {avg_rating} **/5**")
             st.write(f"**Average Sentiment Score:** {overall_avg:.2f} **/1**")
-            st.write("**Sentiment Analysis Table Per Category:**")
+            st.write("**Sentiment Analysis Table Per Category**")
             st.dataframe(aspect_averages)
 
 
