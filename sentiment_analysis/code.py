@@ -12,6 +12,7 @@ nltk.download('punkt_tab')
 nltk.download('vader_lexicon', quiet=True)
 nltk.download('averaged_perceptron_tagger_eng')
 nltk.download('maxent_ne_chunker_tab')
+nltk.download('words')
 sia = SentimentIntensityAnalyzer()
 
 def preprocess_text(text):
