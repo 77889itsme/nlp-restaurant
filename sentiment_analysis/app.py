@@ -60,7 +60,7 @@ def run_sentiment_analysis(df):
                         lat="latitude",
                         lon="longitude",
                         hover_name="name",
-                        zoom=5.5,
+                        zoom=10,
                         height=600
                     )
                     fig.update_layout(
