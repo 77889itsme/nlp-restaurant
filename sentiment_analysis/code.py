@@ -5,10 +5,11 @@ from nltk.chunk import ne_chunk
 from nltk.sentiment import SentimentIntensityAnalyzer
 from concurrent.futures import ThreadPoolExecutor
 
-nltk.download('vader_lexicon', quiet=True)
 nltk.download('punkt_tab')
 nltk.download('averaged_perceptron_tagger_eng')
 nltk.download('maxent_ne_chunker_tab')
+nltk.download('words')
+nltk.download('vader_lexicon', quiet=True)
 
 sia = SentimentIntensityAnalyzer()
 
