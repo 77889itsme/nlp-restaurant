@@ -11,29 +11,29 @@ nltk.download('vader_lexicon', quiet=True)
 sia = SentimentIntensityAnalyzer()
 
 aspect_categories = {
-    "food_quality": [
+    "Food Quality": [
         "food", "taste", "flavor", "dish", "meal", "delicious", "yummy", "fresh", "savor", "tasty", "flavorful", 
         "spicy", "bland", "sweet", "salty", "bitter", "sour", "crispy", "juicy", "hearty", "appetizing", "gourmet",
         "rich", "succulent", "overcooked", "undercooked", "raw", "burnt", "mouthwatering", "greasy"
     ],
-    "service": [
+    "Service": [
         "service", "staff", "waiter", "waitress", "attentive", "friendly", "slow", "helpful", "fast", "polite", 
         "rude", "unprofessional", "professional", "efficient", "courteous", "wait time", "smiling", "assistance", 
         "knowledgeable", "approachable", "accommodating", "disappointing", "welcoming", "supportive", "prompt", 
         "unfriendly", "patient", "kind", "disinterested", "friendly"
     ],
-    "ambiance": [
+    "Ambiance": [
         "ambiance", "atmosphere", "vibe", "decor", "music", "lighting", "environment", "comfort", "cozy", "warm", 
         "inviting", "chilly", "modern", "classic", "elegant", "rustic", "lively", "calm", "romantic", "elegant", 
         "charming", "relaxed", "chilly", "dark", "bright", "stylish", "minimal", "warmth", "cool", "friendly", 
         "intimate", "space", "noise", "crowded", "quiet", "peaceful", "laid-back", "pleasant", "sophisticated"
     ],
-    "cleanliness": [
+    "Cleanliness": [
         "clean", "dirty", "hygiene", "neat", "messy", "orderly", "spotless", "immaculate", "tidy", "unsanitary", 
         "disorganized", "cleanliness", "filthy", "sanitized", "disgusting", "stinky", "smelly", "fresh", "pristine", 
         "scruffy", "dusty", "unhygienic", "cluttered", "messy", "sterile", "decent", "polished"
     ],
-    "price": [
+    "Price": [
         "price", "cost", "expensive", "cheap", "affordable", "value", "inexpensive", "overpriced", "reasonable", 
         "pricy", "value-for-money", "budget", "luxurious", "high-end", "expensive", "costly", "discounted", 
         "affordability", "bargain", "premium", "value", "reasonable", "low-cost", "high-price", "worth it", 
@@ -42,7 +42,6 @@ aspect_categories = {
 }
 
 def extract_aspects(text):
-    """Extract noun chunks and match them with category keywords."""
     tokens = word_tokenize(text)
     tagged = pos_tag(tokens)
     chunks = ne_chunk(tagged, binary=True) 
