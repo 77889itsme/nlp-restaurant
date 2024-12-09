@@ -30,4 +30,4 @@ elif module == "🍴 Recommendation":
 else:
     st.header("Analysis of Restaurant Reviews in California")
     st.write("Welcome to our group project's interactive app! Select a module from the sidebar.")
-    st.image("homepage.png", use_column_width=True)
+    st.image("images/homepage.png", use_column_width=True)
