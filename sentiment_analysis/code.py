@@ -1,6 +1,7 @@
 import pandas as pd
 import nltk
 from nltk import pos_tag
+from nltk.tree import Tree
 from nltk.tokenize import word_tokenize
 from nltk.chunk import ne_chunk
 from nltk.sentiment import SentimentIntensityAnalyzer
@@ -42,20 +43,21 @@ aspect_categories = {
 
 def extract_aspects(text):
     """Extract noun chunks and match them with category keywords."""
-    # Tokenize the text
     tokens = word_tokenize(text)
-    
-    # Part-of-speech tagging
     tagged = pos_tag(tokens)
-    
-    # Chunking (simplified noun phrase extraction)
-    chunks = ne_chunk(tagged, binary=True)
-    aspects = []
+    chunks = ne_chunk(tagged, binary=True) 
+
     aspects = []
     for chunk in chunks:
+        if isinstance(chunk, Tree):
+            entity = " ".join(c[0] for c in chunk.leaves())  # Get the words in the entity
+        else:
+            entity = chunk[0]
+
         for category, keywords in aspect_categories.items():
-            if any(keyword.lower() in chunk.text.lower() for keyword in keywords):
-                aspects.append((category, chunk.text))
+            if any(keyword in entity.lower() for keyword in keywords):
+                aspects.append((category, entity))
+    
     return aspects
 
 def analyze_text_sentiment(text): 
