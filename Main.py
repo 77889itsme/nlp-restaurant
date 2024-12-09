@@ -32,5 +32,6 @@ else:
                 Welcome to our **interactive app**, designed as part of our group project!  
                 Explore restaurant reviews in California with powerful sentiment analysis and recommendation tools we create!  
                 """)
+    st.caption("This is a prototype, and the database is currently limited to Santa Barbara to ensure smooth execution.")
+
     st.image("images/homepage.png", use_container_width=True)
-    st.info("This is a prototype, and the database is currently limited to Santa Barbara to ensure smooth execution.")
