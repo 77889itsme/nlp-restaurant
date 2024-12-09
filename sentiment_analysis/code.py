@@ -78,10 +78,11 @@ def get_word_sentiments(text):
     return sentiments
 
 def process_review(row):
-    review_text = row['body_clean'].apply(preprocess_text)
-    row['sentiment_score'] = analyze_text_sentiment(review_text)
-    aspects = extract_aspects(review_text)
-    word_sentiments = get_word_sentiments(review_text)
+    review_text = row['text']
+    preprocessed_text = preprocess_text(review_text)
+    row['sentiment_score'] = analyze_text_sentiment(preprocessed_text)
+    aspects = extract_aspects(preprocessed_text)
+    word_sentiments = get_word_sentiments(preprocessed_text)
     
     aspect_sentiments = {}
     for category, aspect in aspects:
