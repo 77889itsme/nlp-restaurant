@@ -26,8 +26,6 @@ def run_sentiment_analysis(df):
                 .rename(columns={"index": "Category", 0: "Average Sentiment"})
             ) 
 
-            st.write("Processed Data:")
-            st.dataframe(result_df)
             st.write(f"**Total Reviews Analyzed:** {total_reviews}")
             st.write(f"**Average Rating of {user_input}:** {avg_rating}")
             st.write(f"**Average Sentiment Score:** {overall_avg:.2f}")
@@ -72,3 +70,6 @@ def run_sentiment_analysis(df):
                     st.plotly_chart(fig)
                 else:
                     st.warning("No location data available to display the map.")
+            
+            st.write("Rrocessed Dataset:")
+            st.dataframe(result_df)
