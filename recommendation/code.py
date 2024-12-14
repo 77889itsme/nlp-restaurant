@@ -53,9 +53,9 @@ def recommend_restaurants(user_input, user_city, vectorizer, tfidf_matrix, df, t
         
         # Adjusted weighted aggregate score
         weighted_score = (
-            0.55 * location_score +  # City weight
-            0.25 * cuisine_score +  # Cuisine weight
-            0.2 * stars_score       # Stars weight
+            0.30 * location_score +  # City weight
+            0.30 * cuisine_score +  # Cuisine weight
+            0.40 * stars_score       # Stars weight
         )
         scores.append((idx, weighted_score, appetite_similarities[idx]))
     
